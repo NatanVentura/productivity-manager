@@ -8,31 +8,37 @@ public class Day implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	private LocalDate date;
-	private boolean isDone;
-	private List<Task> tasks;
-	public Day(LocalDate date) {
-		super();
+	private boolean allDone;
+	private List<Task> doneTasks;
+	private List<Task> undoneTasks;
+	public Day(LocalDate date, List<Task> doneTasks, List<Task> undoneTasks) {
 		this.date = date;
-		this.isDone = false;
-		this.tasks = retrieveTasks();
-		
+		this.allDone = verifyDone();
+		this.doneTasks = doneTasks;
+		this.undoneTasks = undoneTasks;
 	}
-	private List<Task> retrieveTasks(){
-		List<Task> dbTasks = null;
-		return dbTasks;
+	public boolean verifyDone() {
+		return (undoneTasks.size() != 0);
 	}
-	
 	public LocalDate getDate() {
 		return date;
 	}
-	public boolean isDone() {
-		return isDone;
+	public boolean isAllDone() {
+		return allDone;
 	}
-	public void setDone(boolean isDone) {
-		this.isDone = isDone;
+	
+	public List<Task> getDoneTasks() {
+		return doneTasks;
 	}
-	public List<Task> getTasks() {
-		return tasks;
+	public void setDoneTasks(List<Task> doneTasks) {
+		this.doneTasks = doneTasks;
+	}
+	public List<Task> getUndoneTasks() {
+		return undoneTasks;
+	}
+	public void setUndoneTasks(List<Task> undoneTasks) {
+		this.undoneTasks = undoneTasks;
+		verifyDone();
 	}
 	@Override
 	public int hashCode() {

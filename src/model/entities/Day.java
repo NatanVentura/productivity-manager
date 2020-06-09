@@ -40,6 +40,10 @@ public class Day implements Serializable{
 		this.undoneTasks = undoneTasks;
 		verifyDone();
 	}
+	
+	public void setAllDone(boolean allDone) {
+		this.allDone = allDone;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;

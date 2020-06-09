@@ -38,7 +38,6 @@ import model.entities.Task;
 
 public class TaskDaoJDBC implements TaskDao {
 
-	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	private Connection conn;
 
 	public TaskDaoJDBC(Connection conn) {
@@ -54,7 +53,7 @@ public class TaskDaoJDBC implements TaskDao {
 		try {
 			
 			st = conn.prepareStatement(
-					"INSERT INTO tasks"
+					"INSERT INTO Tasks"
 					+ "(description,_date,done)"
 					+ "VALUES"
 					+ "(?,?,?)",
@@ -93,7 +92,7 @@ public class TaskDaoJDBC implements TaskDao {
 		try {
 			
 			st = conn.prepareStatement(
-					"UPDATE tasks" +
+					"UPDATE Tasks" +
 					"SET done = ?" + 
 					"WHERE id = ?");
 			
@@ -119,7 +118,7 @@ public class TaskDaoJDBC implements TaskDao {
 		try {
 			
 			st = conn.prepareStatement(
-					"UPDATE tasks " +
+					"UPDATE Tasks " +
 					"SET description = ? " + 
 					"WHERE id = ?");
 			
@@ -139,17 +138,17 @@ public class TaskDaoJDBC implements TaskDao {
 	}
 
 	@Override
-	public void deleteByID(Task obj) {
+	public void deleteByID(int id) {
 		// TODO Auto-generated method stub
 		PreparedStatement st = null;
 		try {
 			
 			st = conn.prepareStatement(
 					"DELETE " +
-					"FROM tasks " + 
+					"FROM Tasks " + 
 					"WHERE id = ?");
 			
-			st.setInt(1, obj.getId());
+			st.setInt(1, id);
 			st.executeUpdate();
 			System.out.println("DELETOU");
 		}
@@ -172,7 +171,7 @@ public class TaskDaoJDBC implements TaskDao {
 		try {
 			
 			st = conn.prepareStatement(
-					"SELECT * FROM tasks " + 
+					"SELECT * FROM Tasks " + 
 					"WHERE _date = ?");
 			
 			st.setDate(1, java.sql.Date.valueOf(date));
@@ -209,7 +208,7 @@ public class TaskDaoJDBC implements TaskDao {
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT * FROM tasks " + 
+					"SELECT * FROM Tasks " + 
 					"WHERE _date = ? "+
 					"AND done = ?"	);
 			
@@ -248,7 +247,7 @@ public class TaskDaoJDBC implements TaskDao {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-			st = conn.prepareStatement("SELECT * FROM tasks");
+			st = conn.prepareStatement("SELECT * FROM Tasks");
 			rs = st.executeQuery();
 			
 			

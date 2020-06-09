@@ -10,7 +10,7 @@ public interface TaskDao {
 	void create(Task obj);
 	void toggleDone(Task obj);
 	void updateDescription(Task obj, String newDescription);
-	void deleteByID(Task obj);
+	void deleteByID(int id);
 	List<Task> findByDate(LocalDate date);
 	public List<Task> findByDateAndDone(LocalDate date,boolean doneStatus);
 	public List<Task> findAll();

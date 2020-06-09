@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
@@ -7,10 +9,11 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <content>
-      <VBox prefHeight="394.0" prefWidth="590.0">
+      <VBox alignment="TOP_CENTER" prefHeight="394.0" prefWidth="590.0">
          <children>
             <MenuBar prefHeight="29.0" prefWidth="594.0">
               <menus>
@@ -31,8 +34,25 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <Label text="Label" />
-            <DatePicker />
+            <Label text="SELECT DATE">
+               <padding>
+                  <Insets bottom="15.0" top="10.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets top="30.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="DejaVu Sans Bold" size="22.0" />
+               </font></Label>
+            <DatePicker>
+               <VBox.margin>
+                  <Insets bottom="15.0" top="15.0" />
+               </VBox.margin></DatePicker>
+            <Button mnemonicParsing="false" text="Go to Date">
+               <VBox.margin>
+                  <Insets bottom="10.0" top="15.0" />
+               </VBox.margin>
+            </Button>
          </children>
       </VBox>
    </content>

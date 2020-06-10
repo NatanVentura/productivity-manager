@@ -31,7 +31,7 @@ public class DB {
 			try {
 				conn.close();
 			} catch(SQLException e) {
-				throw new DbException(e.getMessage());
+				throw new DbException(e.getMessage()); 
 			}
 		}
 	}

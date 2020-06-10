@@ -13,9 +13,9 @@ public class Day implements Serializable{
 	private List<Task> undoneTasks;
 	public Day(LocalDate date, List<Task> doneTasks, List<Task> undoneTasks) {
 		this.date = date;
-		this.allDone = verifyDone();
 		this.doneTasks = doneTasks;
 		this.undoneTasks = undoneTasks;
+		this.allDone = verifyDone();
 	}
 	public boolean verifyDone() {
 		return (undoneTasks.size() != 0);

@@ -6,11 +6,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import db.DB;
 import db.DbException;
 import model.dao.DayDao;
 import model.entities.Day;
+import model.entities.Task;
+import model.dao.DaoFactory;
 
 public class DayDaoJDBC implements DayDao{
 	
@@ -100,6 +104,38 @@ public class DayDaoJDBC implements DayDao{
 			DB.closeResultSet(rs);
 		}
 		return false;
+	}
+
+	@Override
+	public List<Day> findAll() {
+		List<Day> days = new ArrayList<>();
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		TaskDaoJDBC taskDao = (TaskDaoJDBC) DaoFactory.createTaskDao(conn);
+		try {
+			st = conn.prepareStatement("SELECT * FROM Days");
+			rs = st.executeQuery();
+			
+			
+			while(rs.next()) {
+				LocalDate _date = rs.getDate("_date").toLocalDate();
+				List<Task> doneTasks = taskDao.findByDateAndDone(_date, true);
+				List<Task> undoneTasks = taskDao.findByDateAndDone(_date, false);
+				Day day = new Day(_date,doneTasks,undoneTasks);
+				days.add(day);
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		finally{
+			 
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
+		System.out.println(days);
+		
+		return days;
 	}
 
 	

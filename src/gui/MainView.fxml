@@ -11,18 +11,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MainViewController">
    <content>
       <VBox alignment="TOP_CENTER" prefHeight="394.0" prefWidth="590.0">
          <children>
             <MenuBar prefHeight="29.0" prefWidth="594.0">
               <menus>
-                <Menu mnemonicParsing="false" text="File">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
+                <Menu mnemonicParsing="false" text="Config">
                   <items>
                     <MenuItem mnemonicParsing="false" text="Delete" />
                   </items>
@@ -44,11 +39,11 @@
                <font>
                   <Font name="DejaVu Sans Bold" size="22.0" />
                </font></Label>
-            <DatePicker>
+            <DatePicker fx:id="datePicker" promptText="Insert date">
                <VBox.margin>
                   <Insets bottom="15.0" top="15.0" />
                </VBox.margin></DatePicker>
-            <Button mnemonicParsing="false" text="Go to Date">
+            <Button fx:id="goBtn" mnemonicParsing="false" onAction="#goBtnAction" text="Go to Date">
                <VBox.margin>
                   <Insets bottom="10.0" top="15.0" />
                </VBox.margin>

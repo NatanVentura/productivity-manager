@@ -31,7 +31,7 @@ public class DayDaoJDBC implements DayDao{
 			
 			st = conn.prepareStatement(
 					"INSERT INTO Days"
-					+ "(_date,done)"
+					+ "(_date,AllTasksDone)"
 					+ "VALUES"
 					+ "(?,?)",
 					Statement.RETURN_GENERATED_KEYS);
@@ -55,7 +55,7 @@ public class DayDaoJDBC implements DayDao{
 	}
 
 	@Override
-	public void toggleDone(Day obj) {
+	public void setDone(Day obj,boolean done) {
 		PreparedStatement st = null;
 		try {
 			
@@ -64,7 +64,7 @@ public class DayDaoJDBC implements DayDao{
 					"SET done = ?" + 
 					"WHERE id = ?");
 			
-			int i = obj.isAllDone() ? 0 : 1;
+			int i = done ? 1 : 0;
 			obj.setAllDone(!obj.isAllDone());
 			st.setInt(1, i);
 			st.setDate(2, java.sql.Date.valueOf(obj.getDate()));
@@ -81,19 +81,28 @@ public class DayDaoJDBC implements DayDao{
 	}
 
 	@Override
-	public boolean DayExists(LocalDate date) {
+	public Day getDay(LocalDate date) {
 		PreparedStatement st = null;
 		ResultSet rs = null;
+		TaskDaoJDBC taskDao = (TaskDaoJDBC) DaoFactory.createTaskDao(conn);
 		try {
 			
 			st = conn.prepareStatement(
-					"SELECT * FROM Tasks " + 
+					"SELECT * FROM Days " + 
 					"WHERE _date = ?");
 			
 			st.setDate(1, java.sql.Date.valueOf(date));
 			rs = st.executeQuery();
 			
-			return rs.next();
+			if(rs.next()) {
+				LocalDate _date = rs.getDate("_date").toLocalDate();
+				List<Task> doneTasks = taskDao.findByDateAndDone(_date, true);
+				List<Task> undoneTasks = taskDao.findByDateAndDone(_date, false);
+				System.out.println("FIIIIIZ:" + doneTasks);
+				System.out.println("NOOOOOOOOOO FIIIIIZ:" + undoneTasks);
+				Day day = new Day(_date,doneTasks,undoneTasks);
+				return day;
+			}
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -103,7 +112,7 @@ public class DayDaoJDBC implements DayDao{
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
-		return false;
+		return null;
 	}
 
 	@Override
@@ -133,7 +142,6 @@ public class DayDaoJDBC implements DayDao{
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
-		System.out.println(days);
 		
 		return days;
 	}

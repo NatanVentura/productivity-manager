@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import db.DB;
+import model.dao.DaoFactory;
 import model.dao.TaskDao;
+import model.entities.Day;
 import model.entities.Task;
 /*
  PreparedStatement st = null;
@@ -49,17 +51,22 @@ public class TaskDaoJDBC implements TaskDao {
 		
 		PreparedStatement st = null;
 		ResultSet rs = null;
+		DayDaoJDBC dayDao = (DayDaoJDBC) DaoFactory.createDayDao(conn);
+		
 		try {
-			
+			LocalDate dt = obj.getDate();
+			if(dayDao.getDay(dt) == null){
+				dayDao.create(new Day(dt,null,null));
+			}
 			st = conn.prepareStatement(
 					"INSERT INTO Tasks"
-					+ "(description,_date,done)"
-					+ "VALUES"
+					+ "(description,_date,done) "
+					+ "VALUES "
 					+ "(?,?,?)",
 					Statement.RETURN_GENERATED_KEYS);
 			
 			st.setString(1, obj.getDescription());
-			st.setDate(2,java.sql.Date.valueOf(obj.getDate()));
+			st.setDate(2,java.sql.Date.valueOf(dt));
 			st.setInt(3, obj.isDone() ? 1 : 0);
 			
 			int rowsAffected = st.executeUpdate();
@@ -149,7 +156,6 @@ public class TaskDaoJDBC implements TaskDao {
 			
 			st.setInt(1, id);
 			st.executeUpdate();
-			System.out.println("DELETOU");
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -194,7 +200,6 @@ public class TaskDaoJDBC implements TaskDao {
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
-		System.out.println(tasks);
 		
 		return tasks;
 	}
@@ -235,7 +240,6 @@ public class TaskDaoJDBC implements TaskDao {
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
-		System.out.println(tasks);
 		
 		return tasks;
 	}
@@ -267,7 +271,6 @@ public class TaskDaoJDBC implements TaskDao {
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
-		System.out.println(tasks);
 		
 		return tasks;
 	}

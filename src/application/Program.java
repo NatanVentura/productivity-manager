@@ -7,6 +7,7 @@ import java.time.Month;
 
 import db.DB;
 import model.dao.DaoFactory;
+import model.dao.impl.DayDaoJDBC;
 import model.dao.impl.TaskDaoJDBC;
 import model.entities.Task;
 
@@ -18,12 +19,20 @@ public class Program {
 		
 		Connection conn = DB.getConnection();
 		TaskDaoJDBC taskDao = (TaskDaoJDBC) DaoFactory.createTaskDao(conn);
-		Task task = new Task("correr", 0, LocalDate.of(2020, Month.APRIL, 11));
-		taskDao.create(task);
-		taskDao.updateDescription(task, "Paçoca");
+		DayDaoJDBC dayDao = (DayDaoJDBC) DaoFactory.createDayDao(conn);
+		LocalDate date = LocalDate.of(2020, Month.APRIL, 5);
+		taskDao.create(new Task("desesperar",1,  date));
+		taskDao.create(new Task("cu",1, date));
+		taskDao.create(new Task("memdraf", 0, date));
+		taskDao.create(new Task("correr", 1, date));
 		taskDao.findAll();
+		System.out.println("------------");
+		System.out.println(dayDao.getDay(date).verifyDone());
 		DB.closeConnection();
+		
+
 		//System.out.println(taskDao.findByDate(dt));
+		
 		
 	}
 

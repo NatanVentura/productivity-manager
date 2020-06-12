@@ -18,7 +18,7 @@ public class Day implements Serializable{
 		this.allDone = verifyDone();
 	}
 	public boolean verifyDone() {
-		return (undoneTasks.size() != 0);
+		return undoneTasks == null ? true : (undoneTasks.size() == 0);
 	}
 	public LocalDate getDate() {
 		return date;

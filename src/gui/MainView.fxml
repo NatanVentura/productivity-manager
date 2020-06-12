@@ -8,6 +8,9 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -17,37 +20,58 @@
          <children>
             <MenuBar prefHeight="29.0" prefWidth="594.0">
               <menus>
-                <Menu mnemonicParsing="false" text="Config">
+                <Menu fx:id="menuItemConfig" mnemonicParsing="false" text="Config">
                   <items>
                     <MenuItem mnemonicParsing="false" text="Delete" />
                   </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Help">
+                <Menu fx:id="menuItemHelp" mnemonicParsing="false" text="Help">
                   <items>
                     <MenuItem mnemonicParsing="false" text="About" />
                   </items>
                 </Menu>
               </menus>
             </MenuBar>
-            <Label text="SELECT DATE">
+            <Label fx:id="dateTitle" text="dd/MM/yyyy">
                <padding>
-                  <Insets bottom="15.0" top="10.0" />
+                  <Insets bottom="10.0" top="10.0" />
                </padding>
-               <VBox.margin>
-                  <Insets top="30.0" />
-               </VBox.margin>
                <font>
-                  <Font name="DejaVu Sans Bold" size="22.0" />
-               </font></Label>
-            <DatePicker fx:id="datePicker" promptText="Insert date">
-               <VBox.margin>
-                  <Insets bottom="15.0" top="15.0" />
-               </VBox.margin></DatePicker>
-            <Button fx:id="goBtn" mnemonicParsing="false" onAction="#goBtnAction" text="Go to Date">
-               <VBox.margin>
-                  <Insets bottom="10.0" top="15.0" />
-               </VBox.margin>
-            </Button>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <ToolBar prefHeight="40.0" prefWidth="200.0">
+              <items>
+                  <DatePicker fx:id="datePicker" promptText="Insert date" />
+                  <Button fx:id="goBtn" mnemonicParsing="false" onAction="#goBtnAction" text="Go to Date" />
+                  <Label fx:id="errorMsg" opacity="0.0" text="Error! Invalid date." textFill="#e42222" />
+                  <Button fx:id="addBtn" mnemonicParsing="false" text="New Task" />
+              </items>
+            </ToolBar>
+            <ScrollPane prefHeight="200.0" prefWidth="200.0">
+               <content>
+                  <TableView fx:id="undoneTasks" prefHeight="140.0" prefWidth="586.0">
+                    <columns>
+                      <TableColumn prefWidth="75.0" text="CB" />
+                      <TableColumn prefWidth="336.0" text="Items to do" />
+                        <TableColumn minWidth="0.0" prefWidth="75.0" text="Edit" />
+                        <TableColumn prefWidth="81.0" text="Remove" />
+                    </columns>
+                  </TableView>
+               </content>
+            </ScrollPane>
+            <ScrollPane prefHeight="200.0" prefWidth="200.0">
+               <content>
+                  <TableView fx:id="doneTasks" prefHeight="143.0" prefWidth="583.0">
+                     <columns>
+                        <TableColumn prefWidth="75.0" text="CB" />
+                        <TableColumn prefWidth="336.0" text="Items done" />
+                        <TableColumn minWidth="0.0" prefWidth="75.0" text="Edit" />
+                        <TableColumn prefWidth="81.0" text="Remove" />
+                     </columns>
+                  </TableView>
+               </content>
+            </ScrollPane>
          </children>
       </VBox>
    </content>

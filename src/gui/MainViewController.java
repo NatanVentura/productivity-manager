@@ -7,8 +7,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 
-
-
 import application.Main;
 import db.DB;
 import javafx.collections.FXCollections;
@@ -23,10 +21,10 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
-import model.dao.impl.DayDaoJDBC;
 import model.dao.impl.TaskDaoJDBC;
 import model.entities.Task;
 
@@ -63,7 +61,8 @@ public class MainViewController implements Initializable{
 	@FXML
 	private Label doneLabel;
 	
-	
+	@FXML
+	private TableColumn<Task,String> descriptionCol;
 	
 	private ObservableList<Task> obsList;
 	
@@ -100,8 +99,13 @@ public class MainViewController implements Initializable{
 	@Override
 	public void initialize(URL uri, ResourceBundle rb) {
 		loadDate(LocalDate.now());
+		initializeNodes();
 	}
 	
+	private void initializeNodes() {
+		if(descriptionCol != null) descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+	}
+
 	private void loadView(String absoluteName) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));

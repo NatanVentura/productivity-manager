@@ -56,7 +56,7 @@ public class TaskDaoJDBC implements TaskDao {
 		try {
 			LocalDate dt = obj.getDate();
 			if(dayDao.getDay(dt) == null){
-				dayDao.create(new Day(dt,null,null));
+				dayDao.create(new Day(dt,null));
 			}
 			st = conn.prepareStatement(
 					"INSERT INTO Tasks"

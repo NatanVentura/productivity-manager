@@ -20,7 +20,7 @@ public class Program {
 		Connection conn = DB.getConnection();
 		TaskDaoJDBC taskDao = (TaskDaoJDBC) DaoFactory.createTaskDao(conn);
 		DayDaoJDBC dayDao = (DayDaoJDBC) DaoFactory.createDayDao(conn);
-		LocalDate date = LocalDate.of(2020, Month.APRIL, 5);
+		LocalDate date = LocalDate.of(2020, Month.JUNE, 16);
 		taskDao.create(new Task("desesperar",1,  date));
 		taskDao.create(new Task("cu",1, date));
 		taskDao.create(new Task("memdraf", 0, date));

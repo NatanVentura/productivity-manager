@@ -9,16 +9,18 @@ public class Day implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private LocalDate date;
 	private boolean allDone;
-	private List<Task> doneTasks;
-	private List<Task> undoneTasks;
-	public Day(LocalDate date, List<Task> doneTasks, List<Task> undoneTasks) {
+	private List<Task> taskList;
+	public Day(LocalDate date, List<Task> taskList) {
 		this.date = date;
-		this.doneTasks = doneTasks;
-		this.undoneTasks = undoneTasks;
+		this.taskList = taskList;
 		this.allDone = verifyDone();
 	}
 	public boolean verifyDone() {
-		return undoneTasks == null ? true : (undoneTasks.size() == 0);
+		for(Task tk : taskList) {
+			if(tk.isDone()) continue;
+			else return false;
+		}
+		return true;
 	}
 	public LocalDate getDate() {
 		return date;
@@ -27,20 +29,14 @@ public class Day implements Serializable{
 		return allDone;
 	}
 	
-	public List<Task> getDoneTasks() {
-		return doneTasks;
-	}
-	public void setDoneTasks(List<Task> doneTasks) {
-		this.doneTasks = doneTasks;
-	}
-	public List<Task> getUndoneTasks() {
-		return undoneTasks;
-	}
-	public void setUndoneTasks(List<Task> undoneTasks) {
-		this.undoneTasks = undoneTasks;
-		verifyDone();
-	}
+
 	
+	public List<Task> getTaskList() {
+		return taskList;
+	}
+	public void setTaskList(List<Task> taskList) {
+		this.taskList = taskList;
+	}
 	public void setAllDone(boolean allDone) {
 		this.allDone = allDone;
 	}

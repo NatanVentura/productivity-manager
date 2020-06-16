@@ -96,11 +96,8 @@ public class DayDaoJDBC implements DayDao{
 			
 			if(rs.next()) {
 				LocalDate _date = rs.getDate("_date").toLocalDate();
-				List<Task> doneTasks = taskDao.findByDateAndDone(_date, true);
-				List<Task> undoneTasks = taskDao.findByDateAndDone(_date, false);
-				System.out.println("FIIIIIZ:" + doneTasks);
-				System.out.println("NOOOOOOOOOO FIIIIIZ:" + undoneTasks);
-				Day day = new Day(_date,doneTasks,undoneTasks);
+				List<Task> taskList = taskDao.findByDate(_date);
+				Day day = new Day(_date,taskList);
 				return day;
 			}
 		}
@@ -128,9 +125,8 @@ public class DayDaoJDBC implements DayDao{
 			
 			while(rs.next()) {
 				LocalDate _date = rs.getDate("_date").toLocalDate();
-				List<Task> doneTasks = taskDao.findByDateAndDone(_date, true);
-				List<Task> undoneTasks = taskDao.findByDateAndDone(_date, false);
-				Day day = new Day(_date,doneTasks,undoneTasks);
+				List<Task> taskList = taskDao.findByDate(_date);
+				Day day = new Day(_date,taskList);
 				days.add(day);
 			}
 		}

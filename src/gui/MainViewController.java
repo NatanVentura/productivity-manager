@@ -1,28 +1,41 @@
 package gui;
 
 import java.net.URL;
+import java.sql.Connection;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.ResourceBundle;
 
+
+
 import application.Main;
+import db.DB;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
+import model.dao.impl.DayDaoJDBC;
+import model.dao.impl.TaskDaoJDBC;
 import model.entities.Task;
 
 public class MainViewController implements Initializable{
 
+	private TaskDaoJDBC dao;
+	
+	private Connection conn = DB.getConnection();
+	
 	@FXML
 	private MenuItem menuItemConfig;
 	
@@ -45,10 +58,18 @@ public class MainViewController implements Initializable{
 	private Button addBtn;
 	
 	@FXML
-	private TableView<Task> doneTasks;
+	private TableView<Task> taskTable;
 	
 	@FXML
-	private TableView<Task> undoneTasks;
+	private Label doneLabel;
+	
+	
+	
+	private ObservableList<Task> obsList;
+	
+	public void setDao(TaskDaoJDBC dao) {
+		this.dao = dao;
+	}
 	
 	@FXML
 	private void goBtnAction() {
@@ -71,6 +92,8 @@ public class MainViewController implements Initializable{
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		String dtStr = dt.format(dtf);
 		dateTitle.setText(dtStr);
+		setDao(new TaskDaoJDBC(conn));
+		updateTableView(dt);
 	}
 	
 	
@@ -94,6 +117,15 @@ public class MainViewController implements Initializable{
 		} catch(Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
+	}
+	
+	public void updateTableView(LocalDate date) {
+		if (dao == null) {
+			throw new IllegalStateException("Dao was null");
+		}
+		List<Task> list = dao.findByDate(date);
+		obsList = FXCollections.observableArrayList(list);
+		taskTable.setItems(obsList);
 	}
 
 }

@@ -40,6 +40,7 @@
                   <Font size="17.0" />
                </font>
             </Label>
+            <Label fx:id="doneLabel" />
             <ToolBar prefHeight="40.0" prefWidth="200.0">
               <items>
                   <DatePicker fx:id="datePicker" promptText="Insert date" />
@@ -48,27 +49,15 @@
                   <Button fx:id="addBtn" mnemonicParsing="false" text="New Task" />
               </items>
             </ToolBar>
-            <ScrollPane prefHeight="200.0" prefWidth="200.0">
+            <ScrollPane prefHeight="282.0" prefWidth="590.0">
                <content>
-                  <TableView fx:id="undoneTasks" prefHeight="140.0" prefWidth="586.0">
+                  <TableView fx:id="taskTable" prefHeight="288.0" prefWidth="598.0">
                     <columns>
                       <TableColumn prefWidth="75.0" text="CB" />
-                      <TableColumn prefWidth="336.0" text="Items to do" />
+                      <TableColumn prefWidth="336.0" text="Description" />
                         <TableColumn minWidth="0.0" prefWidth="75.0" text="Edit" />
                         <TableColumn prefWidth="81.0" text="Remove" />
                     </columns>
-                  </TableView>
-               </content>
-            </ScrollPane>
-            <ScrollPane prefHeight="200.0" prefWidth="200.0">
-               <content>
-                  <TableView fx:id="doneTasks" prefHeight="143.0" prefWidth="583.0">
-                     <columns>
-                        <TableColumn prefWidth="75.0" text="CB" />
-                        <TableColumn prefWidth="336.0" text="Items done" />
-                        <TableColumn minWidth="0.0" prefWidth="75.0" text="Edit" />
-                        <TableColumn prefWidth="81.0" text="Remove" />
-                     </columns>
                   </TableView>
                </content>
             </ScrollPane>

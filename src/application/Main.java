@@ -6,7 +6,9 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableView;
 import javafx.stage.Stage;
+import model.entities.Task;
 
 
 public class Main extends Application {
@@ -23,8 +25,9 @@ public class Main extends Application {
 		scrollPane.setFitToWidth(true);
 		
 		mainScene = new Scene(scrollPane);
+		System.out.println(mainScene);
 		primaryStage.setScene(mainScene);
-		primaryStage.setTitle("Sample JavaFX application");
+		primaryStage.setTitle("Productivity Manager");
 		primaryStage.show();
 	}catch(IOException e){
 		e.printStackTrace();

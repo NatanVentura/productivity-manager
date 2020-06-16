@@ -51,7 +51,7 @@ public class TaskDaoJDBC implements TaskDao {
 		
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		DayDaoJDBC dayDao = (DayDaoJDBC) DaoFactory.createDayDao(conn);
+		DayDaoJDBC dayDao = (DayDaoJDBC) DaoFactory.createDayDao();
 		
 		try {
 			LocalDate dt = obj.getDate();

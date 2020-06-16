@@ -18,8 +18,8 @@ public class Program {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		
 		Connection conn = DB.getConnection();
-		TaskDaoJDBC taskDao = (TaskDaoJDBC) DaoFactory.createTaskDao(conn);
-		DayDaoJDBC dayDao = (DayDaoJDBC) DaoFactory.createDayDao(conn);
+		TaskDaoJDBC taskDao = (TaskDaoJDBC) DaoFactory.createTaskDao();
+		DayDaoJDBC dayDao = (DayDaoJDBC) DaoFactory.createDayDao();
 		LocalDate date = LocalDate.of(2020, Month.JUNE, 16);
 		taskDao.create(new Task("desesperar",1,  date));
 		taskDao.create(new Task("cu",1, date));

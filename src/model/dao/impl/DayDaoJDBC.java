@@ -84,7 +84,7 @@ public class DayDaoJDBC implements DayDao{
 	public Day getDay(LocalDate date) {
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		TaskDaoJDBC taskDao = (TaskDaoJDBC) DaoFactory.createTaskDao(conn);
+		TaskDaoJDBC taskDao = (TaskDaoJDBC) DaoFactory.createTaskDao();
 		try {
 			
 			st = conn.prepareStatement(
@@ -117,7 +117,7 @@ public class DayDaoJDBC implements DayDao{
 		List<Day> days = new ArrayList<>();
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		TaskDaoJDBC taskDao = (TaskDaoJDBC) DaoFactory.createTaskDao(conn);
+		TaskDaoJDBC taskDao = (TaskDaoJDBC) DaoFactory.createTaskDao();
 		try {
 			st = conn.prepareStatement("SELECT * FROM Days");
 			rs = st.executeQuery();

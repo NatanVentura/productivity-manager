@@ -1,14 +1,12 @@
 package gui;
 
 import java.net.URL;
-import java.sql.Connection;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
-import db.DB;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -24,15 +22,22 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import model.dao.impl.TaskDaoJDBC;
+import javafx.stage.Stage;
 import model.entities.Task;
+import model.services.TaskServices;
 
 public class MainViewController implements Initializable{
 
-	private TaskDaoJDBC dao;
+	private TaskServices service;
 	
-	private Connection conn = DB.getConnection();
+	
+	@FXML
+	private ScrollPane rootScrollPane;
+	
+	@FXML
+	private VBox vBox;
 	
 	@FXML
 	private MenuItem menuItemConfig;
@@ -66,8 +71,8 @@ public class MainViewController implements Initializable{
 	
 	private ObservableList<Task> obsList;
 	
-	public void setDao(TaskDaoJDBC dao) {
-		this.dao = dao;
+	public void setDao(TaskServices service) {
+		this.service = service;
 	}
 	
 	@FXML
@@ -91,7 +96,7 @@ public class MainViewController implements Initializable{
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		String dtStr = dt.format(dtf);
 		dateTitle.setText(dtStr);
-		setDao(new TaskDaoJDBC(conn));
+		setDao(new TaskServices());
 		updateTableView(dt);
 	}
 	
@@ -104,6 +109,10 @@ public class MainViewController implements Initializable{
 	
 	private void initializeNodes() {
 		if(descriptionCol != null) descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+		
+		//Stage stage = (Stage) rootScrollPane.getScene().getWindow();
+		//taskTable.prefHeightProperty().bind(stage.heightProperty());
+		VBox.setVgrow(taskTable, Priority.ALWAYS);
 	}
 
 	private void loadView(String absoluteName) {
@@ -124,10 +133,10 @@ public class MainViewController implements Initializable{
 	}
 	
 	public void updateTableView(LocalDate date) {
-		if (dao == null) {
+		if (service == null) {
 			throw new IllegalStateException("Dao was null");
 		}
-		List<Task> list = dao.findByDate(date);
+		List<Task> list = service.findByDate(date);
 		obsList = FXCollections.observableArrayList(list);
 		taskTable.setItems(obsList);
 	}

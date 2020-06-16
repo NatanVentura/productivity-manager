@@ -11,7 +11,7 @@ public interface TaskDao {
 	void toggleDone(Task obj);
 	void updateDescription(Task obj, String newDescription);
 	void deleteByID(int id);
-	List<Task> findByDate(LocalDate date);
+	public List<Task> findByDate(LocalDate date);
 	public List<Task> findByDateAndDone(LocalDate date,boolean doneStatus);
 	public List<Task> findAll();
 	

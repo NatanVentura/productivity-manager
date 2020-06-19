@@ -118,7 +118,7 @@ public class TaskDaoJDBC implements TaskDao {
 	}
 
 	@Override
-	public void updateDescription(Task obj, String newDescription) {
+	public void update(Task obj) {
 		// TODO Auto-generated method stub
 		PreparedStatement st = null;
 		try {
@@ -126,10 +126,12 @@ public class TaskDaoJDBC implements TaskDao {
 			st = conn.prepareStatement(
 					"UPDATE Tasks " +
 					"SET description = ? " + 
+					"Set _date = ? " +
 					"WHERE id = ?");
 			
-			st.setString(1, newDescription);
-			st.setInt(2, obj.getId());
+			st.setString(1, obj.getDescription());
+			st.setDate(2, java.sql.Date.valueOf(obj.getDate()));
+			st.setInt(3, obj.getId());
 			st.executeUpdate();
 			
 		}

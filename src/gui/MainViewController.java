@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -85,14 +86,17 @@ public class MainViewController implements Initializable{
 	
 	@FXML
 	private void goBtnAction() {
-		LocalDate dt = datePicker.getValue();
-		System.out.println(dt);
-		if(dt == null) {
+		try {
+		    LocalDate dt = datePicker.getConverter().fromString(
+		        datePicker.getEditor().getText());
+		    if(dt == null) throw new IllegalArgumentException();
+		    date = dt;
+		    loadDate();
+		    if(errorMsg.getOpacity() == 1) errorMsg.setOpacity(0);
+		} catch (DateTimeParseException e) {
 			errorMsg.setOpacity(1);
-		} else {
-			if(errorMsg.getOpacity() ==1) errorMsg.setOpacity(0);
-			date = dt;
-			loadDate();
+		} catch (IllegalArgumentException e) {
+				errorMsg.setOpacity(1);
 		}
 		
 	}
@@ -159,7 +163,6 @@ public class MainViewController implements Initializable{
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			
-			System.out.println(obj == null);
 			
 			
 			Pane pane = loader.load();
@@ -167,6 +170,7 @@ public class MainViewController implements Initializable{
 			FormController controller = loader.getController();
 			controller.setTask(obj);
 			controller.updateFormData();
+			controller.setService(new TaskServices());
 			
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Enter task informations");
@@ -179,7 +183,6 @@ public class MainViewController implements Initializable{
 		}
 		catch(IOException e) {
 			Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), AlertType.ERROR);
-			throw e;
 		}
 	}
 

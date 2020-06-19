@@ -1,6 +1,7 @@
 package model.services;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import model.dao.DaoFactory;
@@ -11,5 +12,25 @@ public class TaskServices {
 	TaskDaoJDBC dao = (TaskDaoJDBC) DaoFactory.createTaskDao();
 	public List<Task> findByDate(LocalDate date){
 		return dao.findByDate(date);
+	}
+	
+	public LocalDate tryToGetDate(String strDate){
+		try {
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		    LocalDate dt = LocalDate.parse(strDate, dtf);
+		    if(dt == null) throw new IllegalArgumentException();
+		    return dt;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public void createOrUpdate(Task obj) {
+		if(obj.getId() == 0) {
+			dao.create(obj);
+		} else {
+			dao.update(obj);
+		}
+		
 	}
 }

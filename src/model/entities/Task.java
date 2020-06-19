@@ -49,6 +49,11 @@ public class Task implements Serializable{
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -73,6 +78,7 @@ public class Task implements Serializable{
 	public String toString() {
 		return "Task [id=" + id + ", description=" + description + ", done=" + done + ", date=" + date + "]";
 	}
+	
 	
 	
 	

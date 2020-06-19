@@ -1,15 +1,8 @@
 package application;
 
-import java.sql.Connection;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.Month;
 
-import db.DB;
-import model.dao.DaoFactory;
-import model.dao.impl.DayDaoJDBC;
-import model.dao.impl.TaskDaoJDBC;
-import model.entities.Task;
+import model.services.TaskServices;
 
 public class Program {
 
@@ -17,7 +10,7 @@ public class Program {
 	public static void main(String[] args) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		
-		Connection conn = DB.getConnection();
+		/*Connection conn = DB.getConnection();
 		TaskDaoJDBC taskDao = (TaskDaoJDBC) DaoFactory.createTaskDao();
 		DayDaoJDBC dayDao = (DayDaoJDBC) DaoFactory.createDayDao();
 		LocalDate date = LocalDate.of(2020, Month.JUNE, 16);
@@ -32,8 +25,9 @@ public class Program {
 		
 
 		//System.out.println(taskDao.findByDate(dt));
+		*/
 		
-		
+		TaskServices ts = new TaskServices();
 	}
 
 }

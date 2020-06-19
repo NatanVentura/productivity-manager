@@ -1,19 +1,30 @@
 package gui;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
+import db.DbException;
+import gui.util.Alerts;
 import gui.util.Constraints;
+import gui.util.Utils;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import model.entities.Task;
+import model.services.TaskServices;
 
 public class FormController implements Initializable{
 	
 	private Task task;
+	
+	private TaskServices service;
 	
 	@FXML
 	private Button saveBtn;
@@ -25,10 +36,15 @@ public class FormController implements Initializable{
 	private TextField descInput;
 	
 	@FXML
-	private Label errorLabel;
+	private Label descError;
+
+	@FXML
+	private Label dateError;
+	
+	@FXML
+	private DatePicker dateInput;
 	
 	public void setTask(Task obj) {
-		System.out.println("Here we are " + obj);
 		task = obj;
 	}
 	
@@ -37,8 +53,21 @@ public class FormController implements Initializable{
 		
 	}
 	
+	
 	@FXML
-	public void saveBtnOnaction() {
+	public void saveBtnOnaction(ActionEvent event) {
+		try {
+			boolean sucess = getFormData();
+			if(sucess) {
+				if(service == null) throw new IllegalArgumentException();
+				service.createOrUpdate(task);
+				Utils.currentStage(event).close();
+			}
+		} catch(IllegalArgumentException e) {
+			Alerts.showAlert("Illegal Exception", "Error saving", e.getMessage(), AlertType.ERROR);
+		} catch(DbException e) {
+			Alerts.showAlert("DB Exception", "Error saving", e.getMessage(), AlertType.ERROR);
+		}
 		
 	}
 
@@ -47,15 +76,49 @@ public class FormController implements Initializable{
 		initializeNodes();
 	}
 
+	private boolean getFormData() {
+		boolean error = false;
+		
+		TaskServices service = new TaskServices();
+		String strDate = dateInput.getEditor().getText();
+		System.out.println(strDate);
+		LocalDate dt = service.tryToGetDate(strDate);
+		service.tryToGetDate(strDate);
+		if(dt == null) {
+			dateError.setText("Invalid date");
+			error = true;
+		}
+		
+		String description = descInput.getText();
+		System.out.println(description.length());
+		if(description.length() == 0) {
+			descError.setText("Description was null");
+			error = true;
+		}
+		
+		if(error) {
+			return false;
+		} else {
+			task.setDate(dt);
+			task.setDescription(description);
+			return true;
+		}
+	}
+	
+	public void setService(TaskServices service){
+		this.service = service;
+	}
+	
 	private void initializeNodes() {
 		
 	}
 	
 	public void updateFormData() {
 		if(task == null) {
-			//throw new IllegalArgumentException("Task object cannot be null");
+			throw new IllegalArgumentException("Task object cannot be null");
 		}
 		Constraints.setTextFieldMaxLength(descInput, 30);
 		descInput.setText(task.getDescription());
+		dateInput.setValue(task.getDate());
 	}
 }

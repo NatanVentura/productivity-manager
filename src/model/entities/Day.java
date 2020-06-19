@@ -16,11 +16,14 @@ public class Day implements Serializable{
 		this.allDone = verifyDone();
 	}
 	public boolean verifyDone() {
-		for(Task tk : taskList) {
-			if(tk.isDone()) continue;
-			else return false;
+		if(taskList != null) {
+			for(Task tk : taskList) {
+				if(tk.isDone()) continue;
+				else return false;
+			}
+			return true;
 		}
-		return true;
+		return false;
 	}
 	public LocalDate getDate() {
 		return date;

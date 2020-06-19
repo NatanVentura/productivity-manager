@@ -46,11 +46,11 @@
                   <DatePicker fx:id="datePicker" promptText="Insert date" />
                   <Button fx:id="goBtn" mnemonicParsing="false" onAction="#goBtnAction" text="Go to Date" />
                   <Label fx:id="errorMsg" opacity="0.0" text="Error! Invalid date." textFill="#e42222" />
-                  <Button fx:id="addBtn" mnemonicParsing="false" text="New Task" />
+                  <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addBtnAction" text="New Task" />
               </items>
             </ToolBar>
             <TableView fx:id="taskTable" prefHeight="269.0" prefWidth="514.0">
-            <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+            <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
               <columns>
                 <TableColumn prefWidth="75.0" text="CB" />
                 <TableColumn fx:id="descriptionCol" prefWidth="336.0" text="Description" />

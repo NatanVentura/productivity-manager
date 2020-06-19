@@ -1,5 +1,6 @@
 package gui;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -7,13 +8,17 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
+import gui.util.Alerts;
+import gui.util.Utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -22,8 +27,10 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.entities.Task;
 import model.services.TaskServices;
@@ -32,6 +39,7 @@ public class MainViewController implements Initializable{
 
 	private TaskServices service;
 	
+	private LocalDate date;
 	
 	@FXML
 	private ScrollPane rootScrollPane;
@@ -77,33 +85,38 @@ public class MainViewController implements Initializable{
 	
 	@FXML
 	private void goBtnAction() {
-		LocalDate date = datePicker.getValue();
-		System.out.println(date);
-		if(date == null) {
+		LocalDate dt = datePicker.getValue();
+		System.out.println(dt);
+		if(dt == null) {
 			errorMsg.setOpacity(1);
 		} else {
-			try {
-				loadDate(date);
-			} catch(Exception e) {
-				System.out.println(e.getMessage());
-			}
-			
+			if(errorMsg.getOpacity() ==1) errorMsg.setOpacity(0);
+			date = dt;
+			loadDate();
 		}
 		
 	}
 	
-	public void loadDate(LocalDate dt) {
+	@FXML
+	public void addBtnAction(ActionEvent event) throws IOException {
+		Stage parentStage = Utils.currentStage(event);
+		Task obj = new Task("",0,date);
+		createDialogForm(obj,parentStage,"/gui/Form.fxml");
+	}
+	
+	public void loadDate() {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		String dtStr = dt.format(dtf);
+		String dtStr = date.format(dtf);
 		dateTitle.setText(dtStr);
 		setDao(new TaskServices());
-		updateTableView(dt);
+		updateTableView(date);
 	}
 	
 	
 	@Override
 	public void initialize(URL uri, ResourceBundle rb) {
-		loadDate(LocalDate.now());
+		date = LocalDate.now();
+		loadDate();
 		initializeNodes();
 	}
 	
@@ -119,6 +132,7 @@ public class MainViewController implements Initializable{
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			VBox newVBox = loader.load();
+			
 			
 			Scene mainScene = Main.getScene();
 			VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
@@ -139,6 +153,34 @@ public class MainViewController implements Initializable{
 		List<Task> list = service.findByDate(date);
 		obsList = FXCollections.observableArrayList(list);
 		taskTable.setItems(obsList);
+	}
+	
+	private void createDialogForm(Task obj,Stage parentStage, String absoluteName) throws IOException {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
+			
+			System.out.println(obj == null);
+			
+			
+			Pane pane = loader.load();
+			
+			FormController controller = loader.getController();
+			controller.setTask(obj);
+			controller.updateFormData();
+			
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Enter task informations");
+			dialogStage.setScene(new Scene(pane));
+			dialogStage.setResizable(false);
+			dialogStage.initOwner(parentStage);
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.showAndWait();
+			
+		}
+		catch(IOException e) {
+			Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), AlertType.ERROR);
+			throw e;
+		}
 	}
 
 }

@@ -2,21 +2,23 @@ package gui;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import db.DbException;
+import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Constraints;
 import gui.util.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import model.entities.Task;
 import model.services.TaskServices;
 
@@ -25,6 +27,8 @@ public class FormController implements Initializable{
 	private Task task;
 	
 	private TaskServices service;
+	
+	private List<DataChangeListener> listeners = new ArrayList<>();
 	
 	@FXML
 	private Button saveBtn;
@@ -61,6 +65,7 @@ public class FormController implements Initializable{
 			if(sucess) {
 				if(service == null) throw new IllegalArgumentException();
 				service.createOrUpdate(task);
+				notifyListeners();
 				Utils.currentStage(event).close();
 			}
 		} catch(IllegalArgumentException e) {
@@ -107,6 +112,16 @@ public class FormController implements Initializable{
 	
 	public void setService(TaskServices service){
 		this.service = service;
+	}
+	
+	public void subscribeListener(DataChangeListener listener){
+		listeners.add(listener);
+	}
+	
+	public void notifyListeners() {
+		for(DataChangeListener listener : listeners) {
+			listener.onDataChanged();
+		}
 	}
 	
 	private void initializeNodes() {

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
+import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
 import javafx.collections.FXCollections;
@@ -36,7 +37,7 @@ import javafx.stage.Stage;
 import model.entities.Task;
 import model.services.TaskServices;
 
-public class MainViewController implements Initializable{
+public class MainViewController implements Initializable, DataChangeListener{
 
 	private TaskServices service;
 	
@@ -113,7 +114,7 @@ public class MainViewController implements Initializable{
 		String dtStr = date.format(dtf);
 		dateTitle.setText(dtStr);
 		setDao(new TaskServices());
-		updateTableView(date);
+		updateTableView();
 	}
 	
 	
@@ -150,7 +151,7 @@ public class MainViewController implements Initializable{
 		}
 	}
 	
-	public void updateTableView(LocalDate date) {
+	public void updateTableView() {
 		if (service == null) {
 			throw new IllegalStateException("Dao was null");
 		}
@@ -171,6 +172,7 @@ public class MainViewController implements Initializable{
 			controller.setTask(obj);
 			controller.updateFormData();
 			controller.setService(new TaskServices());
+			controller.subscribeListener(this);
 			
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Enter task informations");
@@ -184,6 +186,11 @@ public class MainViewController implements Initializable{
 		catch(IOException e) {
 			Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), AlertType.ERROR);
 		}
+	}
+
+	@Override
+	public void onDataChanged() {
+		updateTableView();
 	}
 
 }

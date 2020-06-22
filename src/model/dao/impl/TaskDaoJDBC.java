@@ -121,13 +121,21 @@ public class TaskDaoJDBC implements TaskDao {
 	public void update(Task obj) {
 		// TODO Auto-generated method stub
 		PreparedStatement st = null;
+		DayDaoJDBC dayDao = (DayDaoJDBC) DaoFactory.createDayDao();
+		
 		try {
-			
+			LocalDate dt = obj.getDate();
+			if(dayDao.getDay(dt) == null){
+				dayDao.create(new Day(dt,null));
+			}
 			st = conn.prepareStatement(
+					//"SET foreign_key_checks = 0; "+
 					"UPDATE Tasks " +
-					"SET description = ? " + 
-					"Set _date = ? " +
-					"WHERE id = ?");
+					"SET description = ?, " + 
+					"_date = ? " +
+					"WHERE id = ? ;" //+ 
+					//"SET foreign_key_checks = 1; "
+					);
 			
 			st.setString(1, obj.getDescription());
 			st.setDate(2, java.sql.Date.valueOf(obj.getDate()));

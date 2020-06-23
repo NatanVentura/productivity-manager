@@ -92,20 +92,20 @@ public class TaskDaoJDBC implements TaskDao {
 	}
 
 	@Override
-	public void toggleDone(Task obj) {
+	public void setDone(Task obj) {
 		// TODO Auto-generated method stub
 		PreparedStatement st = null;
 		try {
 			
 			st = conn.prepareStatement(
-					"UPDATE Tasks" +
-					"SET done = ?" + 
+					"UPDATE Tasks " +
+					"SET done = ? " + 
 					"WHERE id = ?");
 			
-			int i = obj.isDone() ? 0 : 1;
+			int i = obj.isDone() ? 1 : 0;
 			st.setInt(1, i);
 			st.setInt(2, obj.getId());
-			
+			st.executeUpdate();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();

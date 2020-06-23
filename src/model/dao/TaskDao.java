@@ -8,12 +8,12 @@ import model.entities.Task;
 
 public interface TaskDao {
 	void create(Task obj);
-	void toggleDone(Task obj);
+	void setDone(Task obj);
 	void update(Task obj);
 	void deleteByID(int id);
-	public List<Task> findByDate(LocalDate date);
-	public List<Task> findByDateAndDone(LocalDate date,boolean doneStatus);
-	public List<Task> findAll();
+	List<Task> findByDate(LocalDate date);
+	List<Task> findByDateAndDone(LocalDate date,boolean doneStatus);
+	List<Task> findAll();
 	
 	
 	

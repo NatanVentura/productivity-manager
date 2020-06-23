@@ -14,15 +14,8 @@ public class TaskServices {
 		return dao.findByDate(date);
 	}
 	
-	public LocalDate tryToGetDate(String strDate){
-		try {
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		    LocalDate dt = LocalDate.parse(strDate, dtf);
-		    if(dt == null) throw new IllegalArgumentException();
-		    return dt;
-		} catch (Exception e) {
-			return null;
-		}
+	public void setDone(Task obj) {
+		dao.setDone(obj);
 	}
 	
 	public void createOrUpdate(Task obj) {
@@ -32,5 +25,16 @@ public class TaskServices {
 			dao.update(obj);
 		}
 		
+	}
+	
+	public LocalDate tryToGetDate(String strDate){
+		try {
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		    LocalDate dt = LocalDate.parse(strDate, dtf);
+		    if(dt == null) throw new IllegalArgumentException();
+		    return dt;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }

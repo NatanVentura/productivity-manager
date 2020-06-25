@@ -55,7 +55,7 @@ public class DayDaoJDBC implements DayDao{
 	}
 
 	@Override
-	public void setDone(Day obj,boolean done) {
+	public void setDone(Day obj) {
 		PreparedStatement st = null;
 		try {
 			
@@ -64,8 +64,7 @@ public class DayDaoJDBC implements DayDao{
 					"SET done = ?" + 
 					"WHERE id = ?");
 			
-			int i = done ? 1 : 0;
-			obj.setAllDone(!obj.isAllDone());
+			int i = obj.isAllDone() ? 1 : 0;
 			st.setInt(1, i);
 			st.setDate(2, java.sql.Date.valueOf(obj.getDate()));
 			

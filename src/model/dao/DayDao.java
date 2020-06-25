@@ -7,7 +7,7 @@ import model.entities.Day;
 
 public interface DayDao {
 	void create(Day obj);
-	void setDone(Day obj, boolean done);
+	void setDone(Day obj);
 	Day getDay(LocalDate date);
 	public List<Day> findAll();
 }

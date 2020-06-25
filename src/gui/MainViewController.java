@@ -21,7 +21,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -29,22 +28,31 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+import model.entities.Day;
 import model.entities.Task;
+import model.services.DayServices;
 import model.services.TaskServices;
 
 public class MainViewController implements Initializable, DataChangeListener {
 
-	private TaskServices service;
+	private TaskServices taskService;
+	
+	private DayServices dayService;
 
 	private LocalDate date;
 
-	private boolean done;
+	private Day day;
+	
+	private MainViewController _this = this;
 
 	@FXML
 	private ScrollPane rootScrollPane;
@@ -86,12 +94,12 @@ public class MainViewController implements Initializable, DataChangeListener {
 	private TableColumn<Task, Task> editColumn;
 	
 	@FXML
-	private TableColumn<Task, Task> checkColumn;
+	private TableColumn<Task, Boolean> checkColumn;
 
 	private ObservableList<Task> obsList;
 
-	public void setDao(TaskServices service) {
-		this.service = service;
+	public void setTaskDao(TaskServices taskService) {
+		this.taskService = taskService;
 	}
 
 	@FXML
@@ -123,13 +131,15 @@ public class MainViewController implements Initializable, DataChangeListener {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		String dtStr = date.format(dtf);
 		dateTitle.setText(dtStr);
+		setDay();
 		updateTableView();
 	}
 
 	@Override
 	public void initialize(URL uri, ResourceBundle rb) {
 		date = LocalDate.now();
-		setDao(new TaskServices());
+		setTaskDao(new TaskServices());
+		setDayDao(new DayServices());
 		loadDate();
 		initializeNodes();
 	}
@@ -156,20 +166,52 @@ public class MainViewController implements Initializable, DataChangeListener {
 	 * mainVBox.getChildren().addAll(newVBox.getChildren()); } catch(Exception e) {
 	 * throw new RuntimeException(e.getMessage()); } }
 	 */
-
+	
+	
+	public void setDayDao(DayServices dayService) {
+		this.dayService = dayService;
+	}
+	
+	public void setDay() {
+		day = dayService.getDay(date);
+		if(day == null) {
+			Day _day = new Day(date, null);
+			dayService.create(_day);
+			day = dayService.getDay(date);
+		}
+	}
+	
 	public void checkDone() {
-		// something
+		boolean prevDone = day.isAllDone();
+		day.setAllDone(true);
+		for(Task tk : obsList) {
+			if(!tk.isDone()) {
+				day.setAllDone(false);
+				break;
+			}
+		}
+		if(prevDone != day.isAllDone()) {
+			dayService.setDone(day);
+		}
+		if(day.isAllDone()) {
+			doneLabel.setText("Congratulation! You done all tasks for this day.");
+			doneLabel.setTextFill(Color.web("#008000"));
+		} else {
+			doneLabel.setText("Oh no! You have undone tasks.");
+			doneLabel.setTextFill(Color.web("#ff0000"));
+		}
 	}
 
 	public void updateTableView() {
-		if (service == null) {
+		if (taskService == null) {
 			throw new IllegalStateException("Dao was null");
 		}
-		List<Task> list = service.findByDate(date);
+		List<Task> list = taskService.findByDate(date);
 		obsList = FXCollections.observableArrayList(list);
 		taskTable.setItems(obsList);
 		initEditButtons();
 		initCheckBox();
+		checkDone();
 	}
 
 	private void initEditButtons() {
@@ -196,38 +238,16 @@ public class MainViewController implements Initializable, DataChangeListener {
 	});
 }	
 	private void initCheckBox() {
-		checkColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		checkColumn.setCellFactory(param -> new TableCell<Task, Task>() {
-		private final CheckBox checkBox = new CheckBox();
-		@Override
-		protected void updateItem(Task obj, boolean empty) {
-			super.updateItem(obj, empty);
-			if (obj == null) {
-				setGraphic(null);
-				return;
-			}
-			if (obj.isDone()) {
-				checkBox.setSelected(true);
-			}
-			setGraphic(checkBox);
-			
-			checkBox.setOnAction(event -> {
-				System.out.println(obj);
-				obj.setDone(checkBox.isSelected());
-				System.out.println(obj);
-				service.setDone(obj);
-			});
-			/*
-			button.setOnAction(event -> {
-				try {
-					createDialogForm(obj, Utils.currentStage(event),"/gui/Form.fxml");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			});*/
-		}
-	});
+		checkColumn.setCellValueFactory(new PropertyValueFactory<>("done"));
+		checkColumn.setCellFactory(new Callback<TableColumn<Task, Boolean>, TableCell<Task, Boolean>>() {
+
+		    @Override
+		    public TableCell<Task, Boolean> call(TableColumn<Task, Boolean> col) {
+		    	CheckCell checkCell = new CheckCell(_this);
+		    	checkCell.setService(new TaskServices());
+		        return checkCell;
+		    }
+		});
 }
 
 	private void createDialogForm(Task obj, Stage parentStage, String absoluteName) throws IOException {

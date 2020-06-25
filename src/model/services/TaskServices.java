@@ -27,6 +27,10 @@ public class TaskServices {
 		
 	}
 	
+	public void delete(Task obj) {
+		dao.deleteByID(obj.getId());
+	}
+	
 	public LocalDate tryToGetDate(String strDate){
 		try {
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");

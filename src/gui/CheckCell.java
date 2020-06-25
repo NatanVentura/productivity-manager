@@ -13,7 +13,7 @@ public class CheckCell extends TableCell<Task, Boolean> {
     
     public CheckCell(MainViewController controller){
         box.setOnAction(new EventHandler<ActionEvent>() {
-
+        	
             @Override
             public void handle(ActionEvent e) {
             	Task obj = getTableView().getItems().get(getIndex());

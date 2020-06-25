@@ -19,8 +19,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -95,6 +97,9 @@ public class MainViewController implements Initializable, DataChangeListener {
 	
 	@FXML
 	private TableColumn<Task, Boolean> checkColumn;
+	
+	@FXML
+	private TableColumn<Task, Task> delColumn;
 
 	private ObservableList<Task> obsList;
 
@@ -211,6 +216,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		taskTable.setItems(obsList);
 		initEditButtons();
 		initCheckBox();
+		initDelButtons();
 		checkDone();
 	}
 
@@ -248,6 +254,30 @@ public class MainViewController implements Initializable, DataChangeListener {
 		        return checkCell;
 		    }
 		});
+}
+	private void initDelButtons() {
+		delColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		delColumn.setCellFactory(param -> new TableCell<Task, Task>() {
+		private final Button button = new Button("Delete");
+		@Override
+		protected void updateItem(Task obj, boolean empty) {
+			super.updateItem(obj, empty);
+			if (obj == null) {
+				setGraphic(null);
+				return;
+			}
+			setGraphic(button);
+			button.setOnAction(event -> {
+				Alert alert = new Alert(AlertType.CONFIRMATION,"Delete task '" + obj.getDescription()+ "' ?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+				alert.showAndWait();
+				
+				if(alert.getResult() == ButtonType.YES) {
+					taskService.delete(obj);
+					_this.updateTableView();
+				}
+			});
+		}
+	});
 }
 
 	private void createDialogForm(Task obj, Stage parentStage, String absoluteName) throws IOException {

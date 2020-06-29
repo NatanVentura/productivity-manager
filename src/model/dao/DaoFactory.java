@@ -1,7 +1,5 @@
 package model.dao;
 
-import java.sql.Connection;
-
 import db.DB;
 import model.dao.impl.DayDaoJDBC;
 import model.dao.impl.TaskDaoJDBC;

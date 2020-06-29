@@ -11,7 +11,7 @@ public class CheckCell extends TableCell<Task, Boolean> {
     private final CheckBox box = new CheckBox();
     private TaskServices service;
     
-    public CheckCell(MainViewController controller){
+    public CheckCell(TasksViewController controller){
         box.setOnAction(new EventHandler<ActionEvent>() {
         	
             @Override

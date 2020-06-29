@@ -2,13 +2,12 @@ package application;
 
 import java.io.IOException;
 
+import gui.MainViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableView;
 import javafx.stage.Stage;
-import model.entities.Task;
 
 
 public class Main extends Application {
@@ -29,6 +28,8 @@ public class Main extends Application {
 		primaryStage.setScene(mainScene);
 		primaryStage.setTitle("Productivity Manager");
 		primaryStage.show();
+		MainViewController controller = loader.getController();
+		controller.loadView("/gui/TasksView.fxml");
 	}catch(IOException e){
 		e.printStackTrace();
 	}
@@ -39,6 +40,5 @@ public class Main extends Application {
 	
 	public static void main(String[] args) {
 		launch(args);
-		//Connection conn = DB.getConnection();
 	}
 }

@@ -14,10 +14,6 @@ public class TaskServices {
 		return dao.findByDate(date);
 	}
 	
-	public void setDone(Task obj) {
-		dao.setDone(obj);
-	}
-	
 	public void createOrUpdate(Task obj) {
 		if(obj.getId() == 0) {
 			dao.create(obj);

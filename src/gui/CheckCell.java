@@ -18,7 +18,7 @@ public class CheckCell extends TableCell<Task, Boolean> {
             public void handle(ActionEvent e) {
             	Task obj = getTableView().getItems().get(getIndex());
                 obj.setDone(box.isSelected());
-                service.setDone(obj);
+                service.createOrUpdate(obj);
                 controller.checkDone();
             }
         });
@@ -34,7 +34,6 @@ public class CheckCell extends TableCell<Task, Boolean> {
 
         if(!empty){
             box.setSelected(item);
-            //setText(getTableView().getItems().get(getIndex()).toString());
             setGraphic(box);
         }
         else {

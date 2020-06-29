@@ -14,28 +14,6 @@ import model.dao.DaoFactory;
 import model.dao.TaskDao;
 import model.entities.Day;
 import model.entities.Task;
-/*
- PreparedStatement st = null;
-		ResultSet rs = null;
-		try {
-			conn = DB.getConnection();
-			
-			st = conn.prepareStatement(
-					"",
-					Statement.RETURN_GENERATED_KEYS);
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
-		finally {
-			 
-			DB.closeStatement(st);
-			DB.closeResultSet(rs);
-		}
-		
-		return null;
-	}
- */
 
 public class TaskDaoJDBC implements TaskDao {
 
@@ -47,17 +25,12 @@ public class TaskDaoJDBC implements TaskDao {
 
 	@Override
 	public void create(Task obj) {
-		// TODO Auto-generated method stub
 		
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		DayDaoJDBC dayDao = (DayDaoJDBC) DaoFactory.createDayDao();
 		
 		try {
 			LocalDate dt = obj.getDate();
-			if(dayDao.getDay(dt) == null){
-				dayDao.create(new Day(dt,null));
-			}
 			st = conn.prepareStatement(
 					"INSERT INTO Tasks"
 					+ "(description,_date,done) "
@@ -91,35 +64,10 @@ public class TaskDaoJDBC implements TaskDao {
 		
 	}
 
-	@Override
-	public void setDone(Task obj) {
-		// TODO Auto-generated method stub
-		PreparedStatement st = null;
-		try {
-			
-			st = conn.prepareStatement(
-					"UPDATE Tasks " +
-					"SET done = ? " + 
-					"WHERE id = ?");
-			
-			int i = obj.isDone() ? 1 : 0;
-			st.setInt(1, i);
-			st.setInt(2, obj.getId());
-			st.executeUpdate();
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
-		finally{
-			 
-			DB.closeStatement(st);
-		}
 
-	}
 
 	@Override
 	public void update(Task obj) {
-		// TODO Auto-generated method stub
 		PreparedStatement st = null;
 		DayDaoJDBC dayDao = (DayDaoJDBC) DaoFactory.createDayDao();
 		
@@ -129,17 +77,18 @@ public class TaskDaoJDBC implements TaskDao {
 				dayDao.create(new Day(dt,null));
 			}
 			st = conn.prepareStatement(
-					//"SET foreign_key_checks = 0; "+
 					"UPDATE Tasks " +
 					"SET description = ?, " + 
-					"_date = ? " +
-					"WHERE id = ? ;" //+ 
-					//"SET foreign_key_checks = 1; "
+					"_date = ?," +
+					"done = ? " +
+					"WHERE id = ? ;" 
 					);
 			
 			st.setString(1, obj.getDescription());
 			st.setDate(2, java.sql.Date.valueOf(obj.getDate()));
-			st.setInt(3, obj.getId());
+			int i = obj.isDone() ? 1 : 0;
+			st.setInt(3,i);
+			st.setInt(4, obj.getId());
 			st.executeUpdate();
 			
 		}
@@ -155,7 +104,6 @@ public class TaskDaoJDBC implements TaskDao {
 
 	@Override
 	public void deleteByID(int id) {
-		// TODO Auto-generated method stub
 		PreparedStatement st = null;
 		try {
 			
@@ -214,75 +162,8 @@ public class TaskDaoJDBC implements TaskDao {
 		return tasks;
 	}
 
-	@Override
-	public List<Task> findByDateAndDone(LocalDate date,boolean doneStatus) {
-		// TODO Auto-generated method stub
-		List<Task> tasks = new ArrayList<>();
-		PreparedStatement st = null;
-		ResultSet rs = null;
-		try {
-			st = conn.prepareStatement(
-					"SELECT * FROM Tasks " + 
-					"WHERE _date = ? "+
-					"AND done = ?"	);
-			
-			st.setDate(1, java.sql.Date.valueOf(date));
-			int i = doneStatus ? 1 : 0;
-			st.setInt(2, i);
-			
-			rs = st.executeQuery();
-			
-			
-			while(rs.next()) {
-				int id = rs.getInt("id");
-				String description = rs.getString("description");
-				LocalDate _date = rs.getDate("_date").toLocalDate();
-				int done = rs.getInt("done");
-				Task task = new Task(id,description,done,_date);
-				tasks.add(task);
-			}
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
-		finally{
-			 
-			DB.closeStatement(st);
-			DB.closeResultSet(rs);
-		}
-		
-		return tasks;
-	}
+
 	
-	@Override
-	public List<Task> findAll() {
-		List<Task> tasks = new ArrayList<>();
-		PreparedStatement st = null;
-		ResultSet rs = null;
-		try {
-			st = conn.prepareStatement("SELECT * FROM Tasks");
-			rs = st.executeQuery();
-			
-			
-			while(rs.next()) {
-				int id = rs.getInt("id");
-				String description = rs.getString("description");
-				LocalDate _date = rs.getDate("_date").toLocalDate();
-				int done = rs.getInt("done");
-				Task task = new Task(id,description,done,_date);
-				tasks.add(task);
-			}
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
-		finally{
-			 
-			DB.closeStatement(st);
-			DB.closeResultSet(rs);
-		}
-		
-		return tasks;
-	}
+
 
 }

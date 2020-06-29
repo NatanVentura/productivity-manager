@@ -26,7 +26,6 @@ public class MainViewController implements Initializable{
 	@FXML
 	public void aboutOnAction() {
 		loadView("/gui/Help.fxml");
-		System.out.println("ajfofehna");
 	}
 	
 	@FXML
@@ -38,7 +37,6 @@ public class MainViewController implements Initializable{
 
 	@Override
 	public void initialize(URL uri, ResourceBundle rb) {
-		//loadView("/gui/TasksView.fxml");
 	}
 
 	

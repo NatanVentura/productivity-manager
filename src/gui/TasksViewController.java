@@ -132,24 +132,6 @@ public class TasksViewController implements Initializable, DataChangeListener {
 		setDay();
 		updateTableView();
 	}
-
-	@Override
-	public void initialize(URL uri, ResourceBundle rb) {
-		date = LocalDate.now();
-		setTaskDao(new TaskServices());
-		setDayDao(new DayServices());
-		loadDate();
-		initializeNodes();
-	}
-
-	private void initializeNodes() {
-		if (descriptionCol != null)
-			descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
-
-		// Stage stage = (Stage) rootScrollPane.getScene().getWindow();
-		// taskTable.prefHeightProperty().bind(stage.heightProperty());
-		VBox.setVgrow(taskTable, Priority.ALWAYS);
-	}
 	
 	
 	public void setDayDao(DayServices dayService) {
@@ -215,7 +197,6 @@ public class TasksViewController implements Initializable, DataChangeListener {
 				try {
 					createDialogForm(obj, Utils.currentStage(event),"/gui/Form.fxml");
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			});
@@ -282,6 +263,21 @@ public class TasksViewController implements Initializable, DataChangeListener {
 		} catch (IOException e) {
 			Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), AlertType.ERROR);
 		}
+	}
+	
+	@Override
+	public void initialize(URL uri, ResourceBundle rb) {
+		date = LocalDate.now();
+		setTaskDao(new TaskServices());
+		setDayDao(new DayServices());
+		loadDate();
+		initializeNodes();
+	}
+
+	private void initializeNodes() {
+		if (descriptionCol != null)
+			descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+		VBox.setVgrow(taskTable, Priority.ALWAYS);
 	}
 
 	@Override

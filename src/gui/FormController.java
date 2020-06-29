@@ -86,16 +86,13 @@ public class FormController implements Initializable{
 		
 		TaskServices service = new TaskServices();
 		String strDate = dateInput.getEditor().getText();
-		System.out.println(strDate);
 		LocalDate dt = service.tryToGetDate(strDate);
-		service.tryToGetDate(strDate);
 		if(dt == null) {
 			dateError.setText("Invalid date");
 			error = true;
 		}
 		
 		String description = descInput.getText();
-		System.out.println(description.length());
 		if(description.length() == 0) {
 			descError.setText("Description was null");
 			error = true;

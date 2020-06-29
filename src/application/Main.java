@@ -24,7 +24,6 @@ public class Main extends Application {
 		scrollPane.setFitToWidth(true);
 		
 		mainScene = new Scene(scrollPane);
-		System.out.println(mainScene);
 		primaryStage.setScene(mainScene);
 		primaryStage.setTitle("Productivity Manager");
 		primaryStage.show();
